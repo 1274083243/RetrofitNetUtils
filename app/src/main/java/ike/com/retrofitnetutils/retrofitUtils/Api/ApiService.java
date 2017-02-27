@@ -23,9 +23,9 @@ public interface ApiService {
      * 普通的post请求
      * @param url：请求路径
      * @param params：请求参数
-     * @return
+     * @return:返回请求数据结果
      */
     @FormUrlEncoded
     @POST()
-    public Call<ResponseBody> get(@Url() String url, @FieldMap Map<String,String> params);
+    public Observable<String> post(@Url() String url, @FieldMap Map<String,String> params);
 }

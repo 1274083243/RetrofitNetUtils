@@ -62,21 +62,21 @@ public class ExampleInstrumentedTest {
         map.put("op",601+"");
         Map<String,String> map1=new HashMap<>();
         map1.put("data", JSON.toJSONString(map));
-        Call<ResponseBody> call = apiService.get("http://qqb.sdblo.xyz:10002/index.supreme", map1);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    Log.e(Tag,"成功:"+response.body().string());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e(Tag,"失败:"+t.getMessage());
-            }
-        });
+//        Observable<ResponseBody> call = apiService.get("http://qqb.sdblo.xyz:10002/index.supreme", map1);
+//        call.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                try {
+//                    Log.e(Tag,"成功:"+response.body().string());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                Log.e(Tag,"失败:"+t.getMessage());
+//            }
+//        });
     }
 }
