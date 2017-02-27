@@ -22,6 +22,7 @@ public class RetrofitNetUtils {
     private static OkHttpClient okHttpClient;
     private static ApiService apiService;
     private static final int DEFALT_TIME=10;
+    public static final String BASE_URL="https://qqb.sdblo.xyz:11443/";
     private RetrofitNetUtils(){
 
     }
