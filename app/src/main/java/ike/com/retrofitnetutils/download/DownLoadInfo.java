@@ -13,4 +13,5 @@ public class DownLoadInfo {
     public long readLength;//文件下载长度
     public DownLoadManager.DownLoadState downLoadState;//下载状态
     public DownLoadListener downLoadListener;
+
 }

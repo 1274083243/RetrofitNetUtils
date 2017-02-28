@@ -2,6 +2,7 @@ package ike.com.retrofitnetutils.retrofitUtils.Api;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +11,10 @@ import java.util.concurrent.TimeUnit;
 
 import ike.com.retrofitnetutils.commonUtils.WriteFileUtils;
 import ike.com.retrofitnetutils.download.DownLoadInfo;
+import ike.com.retrofitnetutils.download.DownLoadProgressListener;
 import ike.com.retrofitnetutils.download.DownLoadSubScriber;
 import ike.com.retrofitnetutils.intercepter.CommonParamIntercepter;
+import ike.com.retrofitnetutils.intercepter.DownLoadIntercepter;
 import ike.com.retrofitnetutils.intercepter.UploadProgressCallBack;
 import ike.com.retrofitnetutils.model.ProgressRequestBody;
 import okhttp3.MultipartBody;
@@ -38,15 +41,18 @@ import rx.schedulers.Schedulers;
 **/
 
 public class RetrofitNetUtils {
+    private String Tag="RetrofitNetUtils";
     private static Context context;
     private static OkHttpClient.Builder okHttpBuilder;
     private static Retrofit.Builder retrofitBuilder;
     private static ApiService apiService;
     private static final int DEFALT_TIME=10;
+    private DownLoadProgressListener downLoadProgressListener;
     public static final String BASE_URL="https://qqb.sdblo.xyz:11443/";
     private RetrofitNetUtils(){
 
     }
+
     /**
      * 采用链式建造者模式
      */
@@ -56,6 +62,16 @@ public class RetrofitNetUtils {
             context = mContext.getApplicationContext();
             okHttpBuilder=new OkHttpClient.Builder();
             retrofitBuilder=new Retrofit.Builder();
+        }
+
+        /**
+         * 添加下载拦截器
+         * @param listener
+         * @return
+         */
+        public Builder downLoadIntercepter(DownLoadProgressListener listener){
+            okHttpBuilder.addInterceptor(new DownLoadIntercepter(listener));
+            return this;
         }
         public RetrofitNetUtils build(){
             OkHttpClient okHttpClient = okHttpBuilder.connectTimeout(DEFALT_TIME, TimeUnit.SECONDS)
@@ -70,6 +86,7 @@ public class RetrofitNetUtils {
              apiService = retrofit.create(ApiService.class);
             return new RetrofitNetUtils();
         }
+
 
     }
 
@@ -106,7 +123,8 @@ public class RetrofitNetUtils {
      * @param <T>
      * @return
      */
-    public <T> Subscription downLoadFile(final DownLoadInfo info){
+    public <T> Subscription downLoadFile(final DownLoadInfo info,DownLoadSubScriber downLoadSubScriber){
+        Log.e(Tag,"开始下载");
         return apiService.downLoadFile(info.downLoadPath,"bytes="+info.readLength+"-")
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -122,7 +140,7 @@ public class RetrofitNetUtils {
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DownLoadSubScriber(info));
+                .subscribe(downLoadSubScriber);
     }
 
 }

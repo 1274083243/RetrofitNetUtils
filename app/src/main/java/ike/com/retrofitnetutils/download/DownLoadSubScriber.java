@@ -2,6 +2,7 @@ package ike.com.retrofitnetutils.download;
 
 import java.lang.ref.WeakReference;
 
+import ike.com.retrofitnetutils.BaseApplication;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,6 +29,7 @@ public class DownLoadSubScriber<T> extends Subscriber<T> implements DownLoadProg
             downLoadListener.get().onStart();
         }
         downLoadInfo.downLoadState= DownLoadManager.DownLoadState.START;
+        BaseApplication.info=downLoadInfo;
     }
 
     @Override
@@ -36,6 +38,7 @@ public class DownLoadSubScriber<T> extends Subscriber<T> implements DownLoadProg
             downLoadListener.get().onComplete();
         }
         downLoadInfo.downLoadState= DownLoadManager.DownLoadState.FINISH;
+        BaseApplication.info=downLoadInfo;
     }
 
     @Override
@@ -44,6 +47,7 @@ public class DownLoadSubScriber<T> extends Subscriber<T> implements DownLoadProg
             downLoadListener.get().onError(e);
         }
         downLoadInfo.downLoadState= DownLoadManager.DownLoadState.ERROR;
+        BaseApplication.info=downLoadInfo;
     }
 
     @Override
@@ -54,8 +58,13 @@ public class DownLoadSubScriber<T> extends Subscriber<T> implements DownLoadProg
     }
 
     @Override
-    public void upDownProgress(final long currnetLength,final long countLength, boolean isFinish) {
-        downLoadInfo.totalLength=countLength;
+    public void upDownProgress( long currnetLength, long countLength, boolean isFinish) {
+        if(downLoadInfo.totalLength>countLength){
+            currnetLength=downLoadInfo.totalLength-countLength+currnetLength;
+        }else{
+            downLoadInfo.totalLength=countLength;
+        }
+
         downLoadInfo.readLength=currnetLength;
         if (downLoadListener.get()!=null){
             Observable.just(currnetLength).observeOn(AndroidSchedulers.mainThread())
@@ -64,10 +73,11 @@ public class DownLoadSubScriber<T> extends Subscriber<T> implements DownLoadProg
                         public void call(Long aLong) {
                             if (downLoadInfo.downLoadState!= DownLoadManager.DownLoadState.PAUSE){
                                 downLoadInfo.downLoadState= DownLoadManager.DownLoadState.DOWN_LOADING;
-                                downLoadListener.get().onDownLoad(currnetLength,countLength);
+                                downLoadListener.get().onDownLoad(aLong,downLoadInfo.totalLength);
                             }
                         }
                     });
         }
+        BaseApplication.info=downLoadInfo;
     }
 }
