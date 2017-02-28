@@ -3,6 +3,7 @@ package ike.com.retrofitnetutils.retrofitUtils.Api;
 import android.content.Context;
 import android.util.Log;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
@@ -28,6 +29,7 @@ public abstract class BaseSubScriber<T> extends Subscriber<T> {
         super.onStart();
         if (!NetworkUtils.isConnected(mContext.get())){
             onError(new ApiException(new NetWorkException(),ApiCode.Request.NETWORK_ERROR));
+            Toast.makeText(mContext.get(),"没有网络连接",Toast.LENGTH_SHORT).show();
         }
     }
 
