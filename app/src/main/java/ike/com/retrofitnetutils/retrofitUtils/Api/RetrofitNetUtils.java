@@ -124,7 +124,7 @@ public class RetrofitNetUtils {
      * @return
      */
     public <T> Subscription downLoadFile(final DownLoadInfo info,DownLoadSubScriber downLoadSubScriber){
-        Log.e(Tag,"开始下载");
+        Log.e(Tag,"开始下载123555");
         return apiService.downLoadFile(info.downLoadPath,"bytes="+info.readLength+"-")
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
