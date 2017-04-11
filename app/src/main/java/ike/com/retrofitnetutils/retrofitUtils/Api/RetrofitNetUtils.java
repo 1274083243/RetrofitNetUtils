@@ -134,7 +134,7 @@ public class RetrofitNetUtils {
                         try {
                             WriteFileUtils.writeCache(responseBody,new File(info.savePath),info);
                         } catch (IOException e) {
-                            /*失败抛出异常12334446666*/
+                            /*失败抛出异常12334446666999999*/
                         }
                         return info;
                     }
